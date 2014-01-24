@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+      - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<head>
+    <title>Telemetry SlowSQL</title>
+    <meta charset="UTF-8" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="slowsql.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.widgets.min.js"></script>
+    <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
+    <link rel="stylesheet" href="slowsql.css" />
+    <link rel="stylesheet" href="theme.blue.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+<div id='header'>Telemetry SlowSQL</div>
+<div id='subheader'>Time flies when you're fetching data</div>
+<div id="navbar">
+    <ul id="versions" class="options"></ul>
+    <ul id="index" class="options"></ul>
+</div>
+<div id="graphs">
+    <div id="throbber">
+        <div id="throbber-fg">
+            <div><img src="throbber.gif"/></div>
+            <div id="loading">Loading files...</div>
+        </div>
+        <div id="throbber-bg"></div>
+    </div>
+    <div id="slowsql_data">Ok, now what?</div>
+</div>
+<div id='footer'></div>
+</body>
+</html>
+
