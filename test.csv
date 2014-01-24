@@ -1,0 +1,37 @@
+thread_type,submission_date,app_name,app_version,app_update_channel,query,document_count,total_invocations,total_duration,median_duration
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT id, hits FROM moz_startup_pages WHERE uri = :origin; /* seer.sqlite */",115,119,44857,241
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT key, value FROM webappsstore2 WHERE scope = :scope ORDER BY key LIMIT -1 OFFSET :offset /* webappsstore.sqlite */",105,133,59896,238
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT INTO moz_redirects (pid, uri, origin, hits, last_hit) VALUES (:page_id, :spec, :origin, 1, :now); /* seer.sqlite */",130,180,128399,347.5
+otherThreads,20140110,Fennec,29.0a1,nightly,"/* ../../../storage/src/mozStorageConnection.cpp */ PRAGMA cache_size = -2048 /* webappsstore.sqlite */",289,297,180621,225
+otherThreads,20140110,Fennec,29.0a1,nightly,"COMMIT TRANSACTION /* cookies.sqlite */",305,716,458446,431
+otherThreads,20140110,Fennec,29.0a1,nightly,"DELETE FROM moz_cookies WHERE name = :name AND host = :host AND path = :path /* cookies.sqlite */",667,2694,2015651,560
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_subhosts SET hits = :hit_count, last_hit = :now WHERE id = :id; /* seer.sqlite */",646,4032,2042466,486.0
+otherThreads,20140110,Fennec,29.0a1,nightly,"COMMIT TRANSACTION /* webappsstore.sqlite */",212,505,447479,450.5
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT uri, hits, last_hit FROM moz_subresources WHERE pid = :id; /* seer.sqlite */",141,427,155367,326
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT INTO moz_cookies (baseDomain, appId, inBrowserElement, name, value, host, path, expiry, lastAccessed, creationTime, isSecure, isHttpOnly) VALUES (:baseDomain, :appId, :inBrowserElement, :name, :value, :host, :path, :expiry, :lastAccessed, :creationTime, :isSecure, :isHttpOnly) /* cookies.sqlite */",449,1764,1192742,451
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT INTO moz_subhosts (hid, origin, hits, last_hit) VALUES (:parent_id, :key, 1, :now); /* seer.sqlite */",164,486,311842,502.5
+TOTAL,20140110,Fennec,26.0a1,nightly,ALL_PINGS,67,67,0,0
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_pages SET loads = :load_count, last_load = :now WHERE id = :id; /* seer.sqlite */",180,379,211661,363.0
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_startup_pages SET hits = :hit_count, last_hit = :startup_time WHERE id = :page_id; /* seer.sqlite */",323,561,377372,423
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_hosts SET permission = ?2, expireType= ?3, expireTime = ?4 WHERE id = ?1 /* permissions.sqlite */",339,1104,794508,498
+otherThreads,20140110,Fennec,28.0a1,nightly,"Untracked SQL for seer.sqlite",80,843,525886,894.5
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT OR REPLACE INTO webappsstore2 (scope, key, value) VALUES (:scope, :key, :value)  /* webappsstore.sqlite */",68,140,101571,290.0
+mainThread,20140110,Fennec,29.0a1,nightly,"/* ../../../storage/src/mozStorageConnection.cpp */ PRAGMA cache_size = -2048 /* cookies.sqlite */",298,299,66902,86.0
+otherThreads,20140110,Fennec,29.0a1,nightly,"BEGIN IMMEDIATE /* cookies.sqlite */",281,420,348849,392
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT id, hits, last_hit FROM moz_subresources WHERE pid = :parent_id AND uri = :key; /* seer.sqlite */",84,117,36085,271.5
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT INTO moz_startup_pages (uri, hits, last_hit) VALUES (:origin, 1, :startup_time); /* seer.sqlite */",101,118,73728,296
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT name, value, host, path, expiry, lastAccessed, creationTime, isSecure, isHttpOnly, baseDomain, appId,  inBrowserElement FROM moz_cookies WHERE baseDomain NOTNULL /* cookies.sqlite */",109,154,40789,238
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT INTO moz_pages (uri, loads, last_load) VALUES (:key, 1, :now); /* seer.sqlite */",453,1150,818351,383
+TOTAL,20140110,Fennec,27.0a1,nightly,ALL_PINGS,57,57,0,0
+TOTAL,20140110,Fennec,28.0a1,nightly,ALL_PINGS,148,148,0,0.0
+otherThreads,20140110,Fennec,29.0a1,nightly,"Untracked SQL for seer.sqlite",24,305,433862,3009.5
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_cookies SET lastAccessed = :lastAccessed WHERE name = :name AND host = :host AND path = :path /* cookies.sqlite */",263,546,391823,400
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_subresources SET hits = :hit_count, last_hit = :now WHERE id = :id; /* seer.sqlite */",582,2180,1318528,553.0
+TOTAL,20140110,Fennec,29.0a1,nightly,ALL_PINGS,3515,3515,0,0
+TOTAL,20140110,Fennec,24.0a1,nightly,ALL_PINGS,2,2,0,0.0
+otherThreads,20140110,Fennec,29.0a1,nightly,"INSERT INTO moz_subresources (pid, uri, hits, last_hit) VALUES (:parent_id, :key, 1, :now); /* seer.sqlite */",1125,8476,5639743,712
+otherThreads,20140110,Fennec,29.0a1,nightly,"UPDATE moz_hosts SET loads = :load_count, last_load = :now WHERE id = :id; /* seer.sqlite */",128,381,206503,352.0
+TOTAL,20140110,Fennec,25.0a1,nightly,ALL_PINGS,27,27,0,0
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT id, loads, last_load FROM moz_pages WHERE uri = :key; /* seer.sqlite */",303,553,212372,316
+otherThreads,20140110,Fennec,29.0a1,nightly,"SELECT SUM(LENGTH(key) + LENGTH(value)) FROM webappsstore2 WHERE scope LIKE :scope /* webappsstore.sqlite */",141,166,73809,226
+otherThreads,20140110,Fennec,28.0a1,nightly,"DELETE FROM moz_cookies WHERE name = :name AND host = :host AND path = :path",32,113,99805,771.5
