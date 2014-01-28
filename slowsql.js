@@ -104,37 +104,95 @@ function generateTable(csv) {
     return html;
 }
 
+function updateData(start, end) {
+    console.log("Updating date range: " + start + " to " + end );
+    $('#throbber').fadeIn(500);
+
+    // TODO: iterate from start to end, adding in each day's data.
+    var xhr = new XMLHttpRequest();
+    var url = "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/slowsql" + start + ".csv.gz";
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+        console.log("onload:" + xhr.status);
+        if (xhr.status != 200) {
+            console.log("Failed to load " + url);
+        } else {
+            console.log("Got the data, processing");
+            //console.log(xhr.responseText.substring(1, 50));
+            slowsql_csv = process(xhr.responseText);
+            console.log("done processing, creating tables");
+            $('#slowsql_data').empty();
+            $('#slowsql_data').html(generateTable(slowsql_csv));
+            $('#slowtable').tablesorter({
+                //showProcessing: true,
+                sortList: [[11,1]],
+                sortInitialOrder: 'desc',
+                theme: 'blue',
+                widgets: ['filter'],
+                widgetOptions: {
+                   filter_searchDelay: 600
+                },
+                //widthFixed: true,
+            });
+        }
+        $('#throbber').fadeOut(500);
+        $('#slowsql_data').fadeIn(500);
+    };
+    xhr.onerror = function(e) {
+        throw new Error("failed to retrieve file:" + e);
+        $('#throbber').fadeOut(500);
+        $('#slowsql_data').fadeIn(500);
+    };
+    xhr.send(null);
+    /*
+    $.ajax({
+        //url: "test.csv",
+        url: "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/slowsql20140122.csv.gz",
+        // url: "http://people.mozilla.org/~mreid/test.csv",
+        headers: { "Accept-Encoding" : "gzip" },
+        dataType: 'text',
+        success: function (mydata) {
+            console.log("success");
+            console.log("Got the data");
+            slowsql_csv = process(mydata);
+        },
+        complete: function () {
+            console.log("complete");
+            console.log("Complete");
+            $('#slowsql_data').empty();
+            $('#slowsql_data').html(generateTable(slowsql_csv));
+            $('#slowtable').tablesorter({
+                //showProcessing: true,
+                sortList: [[11,1]],
+                sortInitialOrder: 'desc',
+                theme: 'blue',
+                widgets: ['filter'],
+                widgetOptions: {
+                   filter_searchDelay: 600
+                },
+                //widthFixed: true,
+            });
+            $('#throbber').fadeOut(500);
+            $('#slowsql_data').fadeIn(500);
+        },
+        error: function() {
+            console.log("error");
+            $('#throbber').fadeOut(500);
+            $('#slowsql_data').fadeIn(500);
+        }
+    }); */
+}
+
 $(function () {
     $(document).tooltip({delay: 1000});
+    $("#update_date_range").click(function(){
+        console.log("Updating date range to " + $('#startdate').val() + " to " + $('#enddate').val() );
+    });
+    $(".datepicker").datepicker({dateFormat: "yymmdd", maxDate: -1});
+    $(".datepicker").datepicker("setDate", -1);
     window.setTimeout(function () {
-        $('#throbber').fadeIn(500);
-        $.ajax({
-            url: "test.csv",
-            //url: "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/slowsql20140122.csv.gz",
-            // url: "http://people.mozilla.org/~mreid/test.csv",
-            dataType: 'text',
-            success: function (mydata) {
-                console.log("Got the data");
-                slowsql_csv = process(mydata);
-            },
-            complete: function () {
-                console.log("Complete");
-                $('#slowsql_data').empty();
-                $('#slowsql_data').html(generateTable(slowsql_csv));
-                $('#slowtable').tablesorter({
-                    //showProcessing: true,
-                    sortList: [[11,1]],
-                    sortInitialOrder: 'desc',
-                    theme: 'blue',
-                    widgets: ['filter'],
-                    widgetOptions: {
-                       filter_searchDelay: 600
-                    },
-                    //widthFixed: true,
-                });
-                $('#throbber').fadeOut(500);
-                $('#slowsql_data').fadeIn(500);
-            }
-        });
+        var start = $( "#startdate" ).val();
+        var end = $('#enddate').datepicker("getDate");
+        updateData(start, end);
     }, 100);
 });
