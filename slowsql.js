@@ -144,43 +144,6 @@ function updateData(start, end) {
         $('#slowsql_data').fadeIn(500);
     };
     xhr.send(null);
-    /*
-    $.ajax({
-        //url: "test.csv",
-        url: "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/slowsql20140122.csv.gz",
-        // url: "http://people.mozilla.org/~mreid/test.csv",
-        headers: { "Accept-Encoding" : "gzip" },
-        dataType: 'text',
-        success: function (mydata) {
-            console.log("success");
-            console.log("Got the data");
-            slowsql_csv = process(mydata);
-        },
-        complete: function () {
-            console.log("complete");
-            console.log("Complete");
-            $('#slowsql_data').empty();
-            $('#slowsql_data').html(generateTable(slowsql_csv));
-            $('#slowtable').tablesorter({
-                //showProcessing: true,
-                sortList: [[11,1]],
-                sortInitialOrder: 'desc',
-                theme: 'blue',
-                widgets: ['filter'],
-                widgetOptions: {
-                   filter_searchDelay: 600
-                },
-                //widthFixed: true,
-            });
-            $('#throbber').fadeOut(500);
-            $('#slowsql_data').fadeIn(500);
-        },
-        error: function() {
-            console.log("error");
-            $('#throbber').fadeOut(500);
-            $('#slowsql_data').fadeIn(500);
-        }
-    }); */
 }
 
 $(function () {
