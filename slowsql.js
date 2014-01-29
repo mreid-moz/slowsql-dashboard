@@ -104,36 +104,84 @@ function generateTable(csv) {
     return html;
 }
 
+function zpad(aNum) {
+    return (aNum < 10 ? "0" : "") + aNum;
+}
+
+function yyyymmdd(aDate) {
+    var year = aDate.getUTCFullYear();
+    var month = aDate.getUTCMonth() + 1;
+    var day = aDate.getUTCDate();
+    return "" + year + zpad(month) + zpad(day);
+}
+
+function aggregate_days(per_day_data) {
+    var keys = Object.keys(per_day_data);
+    for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        if (per_day_data[key] === false) {
+            console.log("data isn't finished yet.")
+            return;
+        }
+    };
+    console.log("aggregating some effin data!");
+    // Filter all rows by specified filters
+    // Collect rows by common query
+    // Update "this week"
+}
+
 function updateData(start, end) {
     console.log("Updating date range: " + start + " to " + end );
+    var s = new Date(start);
+    var e = new Date(end);
+    var dates = [];
+    for (var d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+        var formatted = yyyymmdd(d);
+        console.log("Adding a date: " + formatted);
+        dates.push(formatted);
+    }
     $('#throbber').fadeIn(500);
 
-    // TODO: iterate from start to end, adding in each day's data.
+    var per_day = {};
+    dates.forEach(function(item){
+        per_day[item] = false;
+    });
+
+    dates.forEach(function(item){
+        console.log("fetching data for " + item);
+        fetch_data(per_day, item, aggregate_days);
+    });
+}
+
+function fetch_data(per_day, currentDay, callback) {
+    console.log("Current day: " + currentDay);
     var xhr = new XMLHttpRequest();
-    var url = "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/slowsql" + start + ".csv.gz";
+    var url = "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/slowsql" + currentDay + ".csv.gz";
     xhr.open("GET", url, true);
     xhr.onload = function() {
         console.log("onload:" + xhr.status);
         if (xhr.status != 200) {
             console.log("Failed to load " + url);
+            per_day[currentDay] = {data: [], err: "failed to load " + url}
         } else {
-            console.log("Got the data, processing");
+            console.log("Got the data for " + url + ", processing");
             //console.log(xhr.responseText.substring(1, 50));
-            slowsql_csv = process(xhr.responseText);
-            console.log("done processing, creating tables");
-            $('#slowsql_data').empty();
-            $('#slowsql_data').html(generateTable(slowsql_csv));
-            $('#slowtable').tablesorter({
-                //showProcessing: true,
-                sortList: [[11,1]],
-                sortInitialOrder: 'desc',
-                theme: 'blue',
-                widgets: ['filter'],
-                widgetOptions: {
-                   filter_searchDelay: 600
-                },
-                //widthFixed: true,
-            });
+            per_day[currentDay] = {data: $.csv.toArrays(xhr.responseText)};
+            console.log("done processing for " + currentDay + ", got " + per_day[currentDay].data.length + " rows");
+            callback(per_day);
+            //$('#slowsql_data').empty();
+            // $('#slowsql_data').html(generateTable(slowsql_csv));
+            // $('#slowtable').tablesorter({
+            //     //showProcessing: true,
+            //     sortList: [[11,1]],
+            //     sortInitialOrder: 'desc',
+            //     theme: 'blue',
+            //     widgets: ['filter'],
+            //     widgetOptions: {
+            //        filter_searchDelay: 600
+            //     },
+            //     //widthFixed: true,
+            // });
         }
         $('#throbber').fadeOut(500);
         $('#slowsql_data').fadeIn(500);
@@ -149,13 +197,16 @@ function updateData(start, end) {
 $(function () {
     $(document).tooltip({delay: 1000});
     $("#update_date_range").click(function(){
-        console.log("Updating date range to " + $('#startdate').val() + " to " + $('#enddate').val() );
+        var start = $( "#startdate" ).val();
+        var end = $('#enddate').val();
+        updateData(start, end);
+        console.log("Updating date range to " + start + " to " + end);
     });
-    $(".datepicker").datepicker({dateFormat: "yymmdd", maxDate: -1});
+    $(".datepicker").datepicker({dateFormat: "yy-mm-dd", maxDate: -1});
     $(".datepicker").datepicker("setDate", -1);
     window.setTimeout(function () {
         var start = $( "#startdate" ).val();
-        var end = $('#enddate').datepicker("getDate");
+        var end = $('#enddate').val();
         updateData(start, end);
     }, 100);
 });

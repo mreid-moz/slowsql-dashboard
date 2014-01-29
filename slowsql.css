@@ -185,7 +185,11 @@ html, body {
     margin-top: 50px;
 }
 
-/*
+input[type=radio] {
+    border-color: #222;
+}
+
+
 .data {
     margin:0px;
     padding:0px;
@@ -215,7 +219,20 @@ html, body {
     border-right: 1px solid #dad9c7;
     margin-left: -1px;
 }
-*/
+
+.data td.up {
+    color: #22c;
+}
+.data td.down {
+    color: #c22;
+}
+.data td.new {
+    color: #2c2;
+}
+.data td.missing {
+    color: #c0b159;
+}
+
 /*
 .data th.headerSortDown {
     background-image: url(desc.gif);

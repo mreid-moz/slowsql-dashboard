@@ -20,7 +20,34 @@
 <div id='header'>Telemetry SlowSQL</div>
 <div id='subheader'>Time flies when you're fetching data</div>
 <div id="navbar">
-    <ul id="versions" class="options"></ul>
+    Show Top SlowSQL Queries by:<br/>
+    <input type="radio" name="slowsql_type" value="frequency" checked>Most Frequent</input>
+    <input type="radio" name="slowsql_type" value="median_duration">Longest Median Duration</input>
+    <input type="radio" name="slowsql_type" value="total_duration">Longest Total Duration</input>
+    <input type="radio" name="slowsql_type" value="all">All</input>
+    <br/>
+    Filter by Channel: <select id="filter_channel">
+        <option>No Filter</option>
+        <option>nightly</option>
+        <option>aurora</option>
+        <option>beta</option>
+        <option>release</option>
+        <option>OTHER</option>
+    </select>
+    Application: <select id="filter_application">
+        <option>No Filter</option>
+        <option>Firefox</option>
+        <option>Fennec</option>
+        <option>Thunderbird</option>
+        <option>OTHER</option>
+    </select>
+    Limit: <select id="filter_application">
+        <option>Top 10</option>
+        <option>Top 25</option>
+        <option>Top 50</option>
+        <option>Top 100</option>
+    </select>
+    <ul id="frequency" class="options"></ul>
     <ul id="index" class="options"></ul>
 </div>
 <div id="graphs">
@@ -38,6 +65,201 @@
     <input type="text" class="datepicker" id="enddate">
     <button id="update_date_range">Update</button>
     </p>
+    <div id="current_data">
+    <div id="current_data_header">This week's data: Jan 27 - Feb 2, 2014</div>
+    <table id="current_data_table" class="data">
+    <thead>
+    <tr>
+    <th>Rank</th>
+    <th>DB Name</th>
+    <th>Frequency</th>
+    <th>Median Duration</th>
+    <th>Total Duration</th>
+    <th>Query</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td class="up">1 (^1)</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td class="new">2 (new)</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td class="down">3 (v1)</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>4</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>5</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>6</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>7</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>8</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>9</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>10</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+    <div id="previous_data">
+    <div id="previous_data_header">Last week's data: Jan 20 - Jan 26, 2014</div>
+    <table id="previous_data_table" class="data">
+    <thead>
+    <tr>
+    <th>Rank</th>
+    <th>DB Name</th>
+    <th>Frequency</th>
+    <th>Median Duration</th>
+    <th>Total Duration</th>
+    <th>Query</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td>1</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>2</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td class="missing">3</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>4</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>5</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>6</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>7</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>8</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>9</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+        <tr>
+        <td>10</td>
+        <td>places.sqlite</td>
+        <td>64.1%</td>
+        <td>310</td>
+        <td>12358185</td>
+        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        </tr>
+    </tbody>
+    </table>
+    <button>&lt;-- Previous</button> <button>Next --&gt;</button>
+    </div>
     <div id="slowsql_data">
     </div>
 </div>
