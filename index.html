@@ -41,11 +41,11 @@
         <option>Thunderbird</option>
         <option>OTHER</option>
     </select>
-    Limit: <select id="filter_application">
-        <option>Top 10</option>
-        <option>Top 25</option>
-        <option>Top 50</option>
-        <option>Top 100</option>
+    Limit: <select id="filter_rowcount">
+        <option value="10">Top 10</option>
+        <option value="25">Top 25</option>
+        <option value="50">Top 50</option>
+        <option value="100">Top 100</option>
     </select>
     <ul id="frequency" class="options"></ul>
     <ul id="index" class="options"></ul>
@@ -58,15 +58,9 @@
         </div>
         <div id="throbber-bg"></div>
     </div>
-    <p>
-    Submission Date range from
-    <input type="text" class="datepicker" id="startdate">
-    to
-    <input type="text" class="datepicker" id="enddate">
-    <button id="update_date_range">Update</button>
-    </p>
+
     <div id="current_data">
-    <div id="current_data_header">This week's data: Jan 27 - Feb 2, 2014</div>
+    <div id="current_data_header">This week's data</div>
     <table id="current_data_table" class="data">
     <thead>
     <tr>
@@ -80,90 +74,13 @@
     </thead>
     <tbody>
         <tr>
-        <td class="up">1 (^1)</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td class="new">2 (new)</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td class="down">3 (v1)</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>4</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>5</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>6</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>7</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>8</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>9</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>10</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        <td colspan="6">No Data</td>
         </tr>
     </tbody>
     </table>
     </div>
     <div id="previous_data">
-    <div id="previous_data_header">Last week's data: Jan 20 - Jan 26, 2014</div>
+    <div id="previous_data_header">Last week's data</div>
     <table id="previous_data_table" class="data">
     <thead>
     <tr>
@@ -177,88 +94,11 @@
     </thead>
     <tbody>
         <tr>
-        <td>1</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>2</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td class="missing">3</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>4</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>5</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>6</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>7</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>8</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>9</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
-        </tr>
-        <tr>
-        <td>10</td>
-        <td>places.sqlite</td>
-        <td>64.1%</td>
-        <td>310</td>
-        <td>12358185</td>
-        <td>COMMIT TRANSACTION /* places.sqlite */</td>
+        <td colspan="6">No Data</td>
         </tr>
     </tbody>
     </table>
-    <button>&lt;-- Previous</button> <button>Next --&gt;</button>
+    <button id="previous_week">&lt;-- Previous</button> <button id="next_week">Next --&gt;</button>
     </div>
     <div id="slowsql_data">
     </div>
