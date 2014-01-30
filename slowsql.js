@@ -12,7 +12,7 @@ var dowOffset = (yesterday.getUTCDay() - 1) % 7;
 var thisWeekStart = new Date(yesterday);
 var thisWeekEnd = new Date(yesterday);
 thisWeekStart.setDate(thisWeekStart.getDate() - dowOffset);
-thisWeekEnd.setDate(thisWeekStart.getDate() + (7 - dowOffset));
+thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
 //console.log("Set this week to " + yyyymmdd(thisWeekStart) + " to " + yyyymmdd(thisWeekEnd));
 
 var lastWeekStart = new Date(thisWeekStart);
