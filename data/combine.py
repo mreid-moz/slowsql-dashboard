@@ -1,5 +1,6 @@
 import csv
 import gzip
+import os
 import re
 import sys
 
@@ -77,7 +78,25 @@ def combine(q, rows):
 queries = {}
 totals = {}
 total_rows = 0
-for a in sys.argv[1:]:
+output_dir = sys.argv[1]
+week_start = sys.argv[2]
+week_end = sys.argv[3]
+inputs = []
+
+file_pattern = re.compile("^slowsql([0-9]{8}).csv.gz$")
+for root, dirs, files in os.walk("."):
+    for f in files:
+        m = file_pattern.match(f)
+        if m:
+            print "found a file:", f
+            d = m.group(1)
+            if d >= week_start and d <= week_end:
+                print "and it's good!", f
+                inputs.append(os.path.join(root, f))
+        else:
+            print "no match file:", f
+
+for a in inputs:
     print "processing", a
     f = gzip.open(a, 'rb')
     reader = csv.reader(f)
@@ -112,17 +131,20 @@ for q, rows in queries.iteritems():
     print "Combining", len(rows), "items for", q
     combined.append(combine(q, rows))
 
-outfile = open("blab.csv", "w")
-writer = csv.writer(outfile)
-rowcount = 0
-#writer.writerow(["db_name", "frequency", "median_duration", "total_duration", "query"])
-#db_name, frequency, median_duration, total_duration, query
-for row in sorted(combined, key=lambda r: 1.0 - r[1]):
-    writer.writerow(row)
-    rowcount += 1
-    if rowcount >= MAX_ROWS:
-        break
-outfile.close()
+for stub, column in [["frequency", 1], ["median_duration", 2], ["total_duration", 3]]:
+    filename = "weekly_{0}_{1}-{2}.csv".format(stub, week_start, week_end)
+    print "Generating", filename
+    outfile = open(filename, "w")
+    writer = csv.writer(outfile)
+    rowcount = 0
+    #writer.writerow(["db_name", "frequency", "median_duration", "total_duration", "query"])
+    #db_name, frequency, median_duration, total_duration, query
+    for row in sorted(combined, key=lambda r: r[column], reverse=True):
+        writer.writerow(row)
+        rowcount += 1
+        if rowcount >= MAX_ROWS:
+            break
+    outfile.close()
 
 # Output columns:
 #db_name, frequency, median_duration, total_duration, query
