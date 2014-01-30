@@ -206,7 +206,6 @@ input[type=radio] {
     font-size:10px;
     font-family:Arial;
     font-weight:normal;
-    color:#000000;
 }
 .data th.header {
     background-image: url(bg.gif);
@@ -220,16 +219,16 @@ input[type=radio] {
     margin-left: -1px;
 }
 
-.data td.up {
+.up {
     color: #22c;
 }
-.data td.down {
+.down {
     color: #c22;
 }
-.data td.new {
+.new {
     color: #2c2;
 }
-.data td.missing {
+.missing {
     color: #c0b159;
 }
 
