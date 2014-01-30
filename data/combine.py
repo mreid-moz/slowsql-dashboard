@@ -72,7 +72,7 @@ def combine(q, rows):
     # median of medians... insane?
     q_median = median(q_median_dur)
     #print "median of", q_median_dur, "is", q_median
-    return [get_database(q), (float(q_docs) / float(total_docs)), q_median, q_total_dur, q] #, "--", q_invocations, q_docs, total_docs]
+    return [get_database(q), round(float(q_docs) / float(total_docs) * 100, 2), q_median, q_total_dur, q] #, "--", q_invocations, q_docs, total_docs]
 
 queries = {}
 totals = {}
