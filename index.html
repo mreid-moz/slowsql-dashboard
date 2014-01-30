@@ -24,7 +24,6 @@
     <input type="radio" name="slowsql_type" value="frequency" checked>Most Frequent</input>
     <input type="radio" name="slowsql_type" value="median_duration">Longest Median Duration</input>
     <input type="radio" name="slowsql_type" value="total_duration">Longest Total Duration</input>
-    <input type="radio" name="slowsql_type" value="all">All</input>
     <br/>
     Filter by Channel: <select id="filter_channel">
         <option>No Filter</option>
@@ -61,15 +60,21 @@
 
     <div id="current_data">
     <div id="current_data_header">This week's data</div>
+    <div id="current_data_legend">
+    <span class="up">Moved Up in rank</span>
+    <span class="down">Moved Down in rank</span>
+    <span class="new">New</span>
+    <span class="missing">Gone</span>
+    </div>
     <table id="current_data_table" class="data">
     <thead>
     <tr>
     <th>Rank</th>
-    <th>DB Name</th>
-    <th>Frequency</th>
-    <th>Median Duration</th>
-    <th>Total Duration</th>
-    <th>Query</th>
+    <th title="SQLite database name (or UNKNOWN if it could not be determined)">DB Name</th>
+    <th title="Percentage of total pings that contained this query">Frequency (%)</th>
+    <th title="Median of per-ping durations">Median Duration</th>
+    <th title="Total duration of all query executions">Total Duration</th>
+    <th title="SQL Query String">Query</th>
     </tr>
     </thead>
     <tbody>
@@ -79,17 +84,19 @@
     </tbody>
     </table>
     </div>
+    <br/>
+    Compare with:
     <div id="previous_data">
     <div id="previous_data_header">Last week's data</div>
     <table id="previous_data_table" class="data">
     <thead>
     <tr>
     <th>Rank</th>
-    <th>DB Name</th>
-    <th>Frequency</th>
-    <th>Median Duration</th>
-    <th>Total Duration</th>
-    <th>Query</th>
+    <th title="SQLite database name (or UNKNOWN if it could not be determined)">DB Name</th>
+    <th title="Percentage of total pings that contained this query">Frequency (%)</th>
+    <th title="Median of per-ping durations">Median Duration</th>
+    <th title="Total duration of all query executions">Total Duration</th>
+    <th title="SQL Query String">Query</th>
     </tr>
     </thead>
     <tbody>
