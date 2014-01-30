@@ -126,24 +126,6 @@ function fetch_data(key, cb) {
     }
 }
 
-function populate_this_week(key) {
-    console.log("Populating this week's data table");
-    var tbody = $('#current_data_table > tbody');
-    tbody.empty();
-    if (slowsql_data[key]) {
-        for (var i = 0; i < slowsql_data[key].length; i++) {
-            var rank = i + 1;
-            var trow = $('<tr>', {id: "tw" + rank});
-            trow.append($('<td>', {id: "tw" + rank + "rank", text: rank}));
-            var drow = slowsql_data[key][i];
-            for (var j = 0; j < drow.length; j++) {
-                trow.append($('<td>', {text: drow[j]}));
-            }
-            tbody.append(trow);
-        }
-    }
-}
-
 function populate_table(table_id, key, label) {
     console.log("Populating " + table_id + " table");
     var tbody = $('#' + table_id + ' > tbody');
@@ -223,74 +205,6 @@ function update_week_over_week(lastWeekKey, thisWeekKey) {
     });
 }
 
-/*
-function populate_last_week(lastWeekKey) {
-    console.log("Populating last week's data table");
-
-    var thisWeekKey = "" + yyyymmdd(thisWeekStart) + "-" + yyyymmdd(thisWeekEnd);
-    var tbody = $('#previous_data_table > tbody');
-    tbody.empty();
-    var lastWeekQueryRank = {};
-    if (slowsql_data[lastWeekKey]) {
-        if (slowsql_data[lastWeekKey].length == 0) {
-            var trow = $('<tr>', {id: "lw1"});
-            trow.append($('<td>', {colspan: "6", id: "lw1rank", text: "No Data for " + lastWeekKey}));
-            tbody.append(trow);
-        }
-        var maxRows = parseInt($('#filter_rowcount').find(":selected").val());
-        console.log("limiting to " + maxRows + " rows");
-        for (var i = 0; i < slowsql_data[lastWeekKey].length; i++) {
-            var rank = i + 1;
-            if (i >= maxRows) break;
-            var trow = $('<tr>', {id: "lw" + rank});
-            trow.append($('<td>', {id: "lw" + rank + "rank", text: rank}));
-            var drow = slowsql_data[lastWeekKey][i];
-            for (var j = 0; j < drow.length; j++) {
-                trow.append($('<td>', {text: drow[j]}));
-            }
-            lastWeekQueryRank[drow[4]] = rank;
-            tbody.append(trow);
-        }
-    }
-
-    console.log("Done with last week's data table... calculating ranks");
-
-    // For each query, check it in "thisWeekKey" and update the changes accordingly.
-    var thisWeekQueryRank = {};
-    for (var i = 0; i < slowsql_data[thisWeekKey].length; i++) {
-        thisWeekQueryRank[slowsql_data[thisWeekKey][i][4]] = i+1;
-    }
-
-    var lastWeekKeys = Object.keys(lastWeekQueryRank);
-    var thisWeekKeys = Object.keys(thisWeekQueryRank);
-    for (var i = 0; i < lastWeekKeys.length; i++) {
-        var key = lastWeekKeys[i];
-        //console.log("Checking " + key);
-        if (!thisWeekQueryRank[key]) {
-            //console.log("missing in this week: " + key);
-            $('#lw' + lastWeekQueryRank[key] + "> td").addClass("missing");
-        } else if(thisWeekQueryRank[key] < lastWeekQueryRank[key]) {
-            //console.log("moved up this week: " + key);
-            $('#tw' + thisWeekQueryRank[key] + "> td").addClass("up");
-            var ranktext = $('#tw' + thisWeekQueryRank[key] + "rank").val();
-
-        } else if(thisWeekQueryRank[key] > lastWeekQueryRank[key]) {
-            //console.log("moved down this week: " + key);
-            $('#tw' + thisWeekQueryRank[key] + "> td").addClass("down");
-        } else {
-            console.log("no change: " + key);
-        }
-    }
-
-    console.log("Looking for new queries this week");
-    thisWeekKeys.forEach(function(key, idx, arr) {
-        if (!thisWeekQueryRank[key]) {
-            //console.log("new this week: " + key);
-            $('#tw' + thisWeekQueryRank[key] + "> td").addClass("new");
-        }
-    });
-}*/
-
 function get_slowsql_type() {
     return $('input[name=slowsql_type]:radio:checked').val();
 }
@@ -307,23 +221,14 @@ function update_data() {
     // Update this week's data if need be:
     var thisWeekKey = get_key(thisWeekStart, thisWeekEnd);
     var lastWeekKey = get_key(lastWeekStart, lastWeekEnd);
-    // Load this week's data
+    // Load the requested data
     fetch_data(thisWeekKey, function(){
         fetch_data(lastWeekKey, function() {
             populate_table("current_data_table", thisWeekKey, "tw");
             populate_table("previous_data_table", lastWeekKey, "lw");
-            //populate_this_week(thisWeekKey);
-            //populate_last_week(lastWeekKey);
             update_week_over_week(lastWeekKey, thisWeekKey);
         });
     });
-
-    // Update last week's data if need be:
-    // var lastWeekKey = "" + yyyymmdd(lastWeekStart) + "-" + yyyymmdd(lastWeekEnd);
-    // // Load last week's data
-    // if (!slowsql_data[lastWeekKey]) {
-    //     fetch_data(lastWeekKey, populate_last_week);
-    // }
 }
 
 $(function () {
