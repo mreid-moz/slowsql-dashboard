@@ -170,12 +170,21 @@ function populate_table(table_id, key, label) {
 
 function update_week_over_week(lastWeekKey, thisWeekKey) {
     var thisWeekQueryRank = {};
-    for (var i = 0; i < slowsql_data[thisWeekKey].length; i++) {
+    var maxRows = parseInt($('#filter_rowcount').find(":selected").val());
+    var end = maxRows;
+    if (slowsql_data[thisWeekKey].length < end) {
+        end = slowsql_data[thisWeekKey].length;
+    }
+    for (var i = 0; i < end; i++) {
         thisWeekQueryRank[slowsql_data[thisWeekKey][i][4]] = i+1;
     }
 
     var lastWeekQueryRank = {};
-    for (var i = 0; i < slowsql_data[lastWeekKey].length; i++) {
+    end = maxRows;
+    if (slowsql_data[lastWeekKey].length < end) {
+        end = slowsql_data[lastWeekKey].length;
+    }
+    for (var i = 0; i < end; i++) {
         lastWeekQueryRank[slowsql_data[lastWeekKey][i][4]] = i+1;
     }
 
@@ -200,8 +209,8 @@ function update_week_over_week(lastWeekKey, thisWeekKey) {
             var lastrank = lastWeekQueryRank[key];
             var ranktext = thisrank + " (was " + lastrank + ")";
             $('#tw' + thisWeekQueryRank[key] + "rank").html(ranktext);
-        } else {
-            console.log("no change: " + key);
+        //} else {
+        //    console.log("no change: " + key);
         }
     }
 
