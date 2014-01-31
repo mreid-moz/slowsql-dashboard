@@ -22,8 +22,8 @@ def get_key(row):
     # excluding QUERY_COLUMN
     return ",".join(row[APP_COLUMN:QUERY_COLUMN]);
 
-db_regex1 = re.compile(r'.*\/\* ([^ ]+) \*\/');
-db_regex2 = re.compile(r'^Untracked SQL for (.+)$');
+db_regex1 = re.compile(r'.*\/\* ([^ ]+) \*\/\t.*\t.*');
+db_regex2 = re.compile(r'^Untracked SQL for (.+)\t.*\t.*$');
 def get_database(query):
     m = db_regex1.match(query)
     if m:
@@ -113,14 +113,15 @@ for a in inputs:
                     totals[total_key] = 0
                 totals[total_key] += int(row[COUNT_COLUMN])
             else:
-                q = row[QUERY_COLUMN]
-                if q not in queries:
-                    queries[q] = []
-                queries[q].append(row)
+                q = row[QUERY_COLUMN].replace("\t", " ")
+                qk = "\t".join([q, row[APP_COLUMN], row[CHAN_COLUMN]])
+                #q = row[QUERY_COLUMN]
+                if qk not in queries:
+                    queries[qk] = []
+                queries[qk].append(row)
         #else:
         #    print "not enough columns:", row
         rowcount += 1
-    print "Found", rowcount, "rows"
     total_rows += rowcount
     f.close()
 
@@ -134,17 +135,21 @@ for q, rows in queries.iteritems():
 for stub, column in [["frequency", 1], ["median_duration", 2], ["total_duration", 3]]:
     filename = "weekly_{0}_{1}-{2}.csv".format(stub, week_start, week_end)
     print "Generating", filename
+    counters = {}
     outfile = open(filename, "w")
     writer = csv.writer(outfile)
-    rowcount = 0
-    #writer.writerow(["db_name", "frequency", "median_duration", "total_duration", "query"])
-    #db_name, frequency, median_duration, total_duration, query
+    #db_name, frequency, median_duration, total_duration, query, app_name, channel
     for row in sorted(combined, key=lambda r: r[column], reverse=True):
-        writer.writerow(row)
-        rowcount += 1
-        if rowcount >= MAX_ROWS:
-            break
+        q = row[-1]
+        if q not in counters:
+            counters[q] = 0
+        counters[q] += 1
+
+        if counters[q] > MAX_ROWS:
+            continue
+        query, app, chan = q.split("\t")
+        writer.writerow(row[0:-1] + [query, app, chan])
     outfile.close()
 
 # Output columns:
-#db_name, frequency, median_duration, total_duration, query
+#db_name, frequency, median_duration, total_duration, query, app_name, channel
