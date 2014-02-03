@@ -218,9 +218,9 @@ function get_key(start, end) {
 }
 
 function update_data() {
-    $('#current_data_header').html("This Week: " + yyyymmdd(thisWeekStart) + " to " + yyyymmdd(thisWeekEnd));
+    $('#current_data_header').html("Slow queries for the week of " + yyyymmdd(thisWeekStart) + " to " + yyyymmdd(thisWeekEnd));
     // Update last week's header:
-    $('#previous_data_header').html("Week Of: " + yyyymmdd(lastWeekStart) + " to " + yyyymmdd(lastWeekEnd));
+    $('#previous_data_header').html("Compared with the week of " + yyyymmdd(lastWeekStart) + " to " + yyyymmdd(lastWeekEnd));
 
     // Update this week's data if need be:
     var thisWeekKey = get_key(thisWeekStart, thisWeekEnd);
@@ -260,7 +260,7 @@ $(function () {
     $('input[name=slowsql_type]').change(update_data);
 
     update_data();
-    $('#current_data_header').html("This Week: " + yyyymmdd(thisWeekStart) + " to " + yyyymmdd(thisWeekEnd));
+    //$('#current_data_header').html("This Week: " + yyyymmdd(thisWeekStart) + " to " + yyyymmdd(thisWeekEnd));
     //$('#previous_data_header').html("Last Week: " + yyyymmdd(lastWeekStart) + " to " + yyyymmdd(lastWeekEnd));
     $(document).tooltip({delay: 1000});
 

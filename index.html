@@ -14,10 +14,10 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 </head>
 <body>
-<div id='header'>Telemetry SlowSQL</div>
-<div id='subheader'>Time flies when you're fetching data</div>
+<div id="header">Telemetry SlowSQL</div>
+<div id="subheader">Time flies when you're fetching data</div>
 <div id="navbar">
-    Sort Top SlowSQL Queries by:<br/>
+    <strong>Sort Top SlowSQL Queries by:</strong><br/>
     <input id="type_frequency" type="radio" name="slowsql_type" value="frequency" checked></input>
     <label for="type_frequency">Most Frequent</label>
     <input id="type_median" type="radio" name="slowsql_type" value="median_duration">
@@ -25,7 +25,7 @@
     <input id="type_duration" type="radio" name="slowsql_type" value="total_duration">
     <label for="type_duration">Longest Total Duration</label></input>
     <br/>
-    Filter by:<br/>
+    <strong>Filter by:</strong><br/>
     Thread Type: <select id="filter_thread">
         <option value="mainThread">Main Thread</option>
         <option value="otherThreads">Other Threads</option>
