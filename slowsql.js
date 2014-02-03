@@ -4,7 +4,7 @@
 "use strict";
 
 var yesterday = new Date();
-yesterday.setDate(yesterday.getDate() - 1);
+yesterday.setDate(yesterday.getDate() - 5);
 //console.log("Set yesterday to " + yyyymmdd(yesterday));
 
 // Monday is 1, so we adjust offset accordingly
@@ -13,62 +13,27 @@ var thisWeekStart = new Date(yesterday);
 var thisWeekEnd = new Date(yesterday);
 thisWeekStart.setDate(thisWeekStart.getDate() - dowOffset);
 thisWeekEnd.setDate(thisWeekStart.getDate() + 6);
-//console.log("Set this week to " + yyyymmdd(thisWeekStart) + " to " + yyyymmdd(thisWeekEnd));
 
 var lastWeekStart = new Date(thisWeekStart);
 lastWeekStart.setDate(lastWeekStart.getDate() - 7);
 var lastWeekEnd = new Date(thisWeekEnd);
 lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
-//console.log("Set last week to " + yyyymmdd(lastWeekStart) + " to " + yyyymmdd(lastWeekEnd));
+
+var version_filters = [];
 
 var slowsql_data = {};
 
-var displayNames = {
- thread_type: "Thread",
- submission_date: "Submission Date",
- app_name: "App",
- app_version: "Version",
- app_update_channel: "Channel",
- query: "SQL String",
- document_count: "SQL Occurence Count",
- total_invocations: "Total SQL Exec Count",
- total_duration: "Total Duration (ms)",
- median_duration: "Median Duration (ms)",
- total_documents: "Total Documents",
- occurence_rate: "% of Docs",
- database: "Database Name",
-};
-var tooltips = {
- thread_type: "Whether the SQL was run on the main thread or on another thread",
- submission_date: "Date when the telemetry pings were submitted",
- app_name: "Application Name (Firefox, Fennec, etc)",
- app_version: "Application Version",
- app_update_channel: "Application Update Channel",
- query: "Sanitized query string",
- document_count: "Total number of pings containing this query",
- total_invocations: "Total number of times this query was executed by all reporting pings",
- total_duration: "Total duration of all query executions",
- median_duration: "Median of per-ping durations",
- total_documents: "Total number of documents with the same Submission Date, App, Version, and Channel",
- occurence_rate: "Percentage of total pings that contained this query.",
- database: "SQLite database name (or UNKNOWN if it could not be determined)",
-};
-
-function getKey(arr) {
-    return arr.slice(1,5).join(",");
-}
-
-function getDatabase(query) {
-    var match = query.match(/^.*\/\* ([^ ]+) \*\/.*$/);
-    if (match) {
-        return match[1];
-    }
-    var match = query.match(/^Untracked SQL for (.+)$/);
-    if (match) {
-        return match[1];
-    }
-    return "UNKNOWN";
-}
+// db_name, frequency, document_count, median_duration, total_duration, query, thread, app_name, channel, version
+var DB_COLUMN          = 0;
+var FREQ_COLUMN        = 1;
+var COUNT_COLUMN       = 2;
+var MEDIAN_DUR_COLUMN  = 3;
+var TOTAL_DUR_COLUMN   = 4;
+var QUERY_COLUMN       = 5;
+var THREAD_COLUMN      = 6;
+var APP_COLUMN         = 7;
+var CHAN_COLUMN        = 8;
+var VER_COLUMN         = 9;
 
 function zpad(aNum) {
     return (aNum < 10 ? "0" : "") + aNum;
@@ -81,14 +46,44 @@ function yyyymmdd(aDate) {
     return "" + year + zpad(month) + zpad(day);
 }
 
+function clean_version(ver) {
+    var m = ver.match(/^([0-9]+).*$/);
+    if (m) {
+        return m[1];
+    }
+    return ver;
+}
+
+function update_version_filter(key) {
+    if (version_filters.length == 0) {
+        var vermap = {};
+        for (var i = 0; i < slowsql_data[key].length; i++) {
+            vermap[clean_version(slowsql_data[key][i][VER_COLUMN])] = 1;
+        }
+        version_filters = Object.keys(vermap);
+        version_filters.sort(function(a, b) {
+            // Sort descending
+            return parseInt(b) - parseInt(a);
+        });
+        // Populate the filter list:
+        var version_select = $('#filter_version');
+        for (var j = 0; j < version_filters.length; j++) {
+            version_select.append($('<option>', {text: version_filters[j]}));
+        }
+    }
+}
+
 function fetch_data(key, cb) {
     if (slowsql_data[key]) {
-        cb();
+        cb(key);
         return;
     }
+
+    $('#slowsql_data').fadeOut(500);
+    $('#throbber').fadeIn(500);
     console.log("Fetching: " + key);
     var xhr = new XMLHttpRequest();
-    //var url = "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/weekly" + key + ".csv.gz";
+    //var url = "https://s3-us-west-2.amazonaws.com/telemetry-public-analysis/slowsql/data/weekly_" + key + ".csv.gz";
     var url = "weekly_" + key + ".csv";
     console.log("Fetching url: " + url);
     xhr.open("GET", url, true);
@@ -99,19 +94,19 @@ function fetch_data(key, cb) {
             slowsql_data[key] = []
         } else {
             console.log("Got the data for " + url + ", processing");
-            //console.log(xhr.responseText.substring(1, 50));
             slowsql_data[key] = $.csv.toArrays(xhr.responseText);
+            update_version_filter(key);
             console.log("done processing for " + key + ", got " + slowsql_data[key].length + " rows");
         }
-        $('#throbber').fadeOut(500);
-        $('#slowsql_data').fadeIn(500);
+        //$('#throbber').fadeOut(500);
+        //$('#slowsql_data').fadeIn(500);
         cb(key);
     };
     xhr.onerror = function(e) {
         //throw new Error("failed to retrieve file:" + e);
         console.log("Failed to fetch: " + url);
-        $('#throbber').fadeOut(500);
-        $('#slowsql_data').fadeIn(500);
+        //$('#throbber').fadeOut(500);
+        //$('#slowsql_data').fadeIn(500);
         slowsql_data[key] = []
         cb(key);
     };
@@ -119,8 +114,8 @@ function fetch_data(key, cb) {
         xhr.send(null);
     } catch(e) {
         console.log("Failed to fetch: " + url);
-        $('#throbber').fadeOut(500);
-        $('#slowsql_data').fadeIn(500);
+        //$('#throbber').fadeOut(500);
+        //$('#slowsql_data').fadeIn(500);
         slowsql_data[key] = []
         cb(key);
     }
@@ -129,6 +124,10 @@ function fetch_data(key, cb) {
 function populate_table(table_id, key, label) {
     console.log("Populating " + table_id + " table");
     var tbody = $('#' + table_id + ' > tbody');
+    var filter_thread = $('#filter_thread').find(":selected").val();
+    var filter_app = $('#filter_application').find(":selected").val();
+    var filter_channel = $('#filter_channel').find(":selected").val();
+    var filter_version = $('#filter_version').find(":selected").val();
     tbody.empty();
     if (!slowsql_data[key] || slowsql_data[key].length == 0) {
         var trow = $('<tr>', {id: label + "1"});
@@ -136,38 +135,43 @@ function populate_table(table_id, key, label) {
         tbody.append(trow);
     } else {
         var maxRows = parseInt($('#filter_rowcount').find(":selected").val());
+        var rank = 1;
         for (var i = 0; i < slowsql_data[key].length; i++) {
-            if (i >= maxRows) break;
-            var rank = i + 1;
-            var trow = $('<tr>', {id: label + rank});
-            trow.append($('<td>', {id: label + rank + "rank", text: rank}));
+            if (rank > maxRows) break;
             var drow = slowsql_data[key][i];
-            for (var j = 0; j < drow.length; j++) {
-                trow.append($('<td>', {text: drow[j]}));
+            if (drow[THREAD_COLUMN] === filter_thread &&
+                drow[APP_COLUMN] === filter_app &&
+                clean_version(drow[VER_COLUMN]) === filter_version &&
+                drow[CHAN_COLUMN] === filter_channel) {
+                var trow = $('<tr>', {id: label + rank});
+                trow.append($('<td>', {id: label + rank + "rank", text: rank}));
+                for (var j = 0; j < QUERY_COLUMN; j++) {
+                    trow.append($('<td>', {text: drow[j]}));
+                }
+                trow.append($('<td>', {id: label + rank + "q", text: drow[QUERY_COLUMN]}));
+                tbody.append(trow);
+                rank++;
+            //} else {
+            //    console.log("skipping a row with app " + drow[5] + ", chan " + drow[6]);
             }
-            tbody.append(trow);
         }
     }
 }
 
 function update_week_over_week(lastWeekKey, thisWeekKey) {
     var thisWeekQueryRank = {};
-    var maxRows = parseInt($('#filter_rowcount').find(":selected").val());
-    var end = maxRows;
-    if (slowsql_data[thisWeekKey].length < end) {
-        end = slowsql_data[thisWeekKey].length;
-    }
-    for (var i = 0; i < end; i++) {
-        thisWeekQueryRank[slowsql_data[thisWeekKey][i][4]] = i+1;
-    }
-
     var lastWeekQueryRank = {};
-    end = maxRows;
-    if (slowsql_data[lastWeekKey].length < end) {
-        end = slowsql_data[lastWeekKey].length;
-    }
-    for (var i = 0; i < end; i++) {
-        lastWeekQueryRank[slowsql_data[lastWeekKey][i][4]] = i+1;
+    var maxRows = parseInt($('#filter_rowcount').find(":selected").val());
+    for (var i = 1; i <= maxRows; i++) {
+        var query = $('#tw' + i + 'q').text();
+        //console.log("This week's rank " + i + " is " + query);
+        if (query) {
+            thisWeekQueryRank[query] = i;
+        }
+        query = $('#lw' + i + 'q').text();
+        if (query) {
+            lastWeekQueryRank[query] = i;
+        }
     }
 
     var lastWeekKeys = Object.keys(lastWeekQueryRank);
@@ -227,6 +231,8 @@ function update_data() {
             populate_table("current_data_table", thisWeekKey, "tw");
             populate_table("previous_data_table", lastWeekKey, "lw");
             update_week_over_week(lastWeekKey, thisWeekKey);
+            $('#throbber').fadeOut(500);
+            $('#slowsql_data').fadeIn(500);
         });
     });
 }
@@ -242,7 +248,11 @@ $(function () {
         lastWeekEnd.setDate(lastWeekEnd.getDate() + 7);
         update_data();
     });
+    $('#filter_thread').change(update_data);
+    $('#filter_application').change(update_data);
+    $('#filter_channel').change(update_data);
     $('#filter_rowcount').change(update_data);
+    $('#filter_version').change(update_data);
     $('input[name=slowsql_type]').change(update_data);
 
     update_data();

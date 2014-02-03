@@ -22,8 +22,8 @@ def get_key(row):
     # excluding QUERY_COLUMN
     return ",".join(row[APP_COLUMN:QUERY_COLUMN]);
 
-db_regex1 = re.compile(r'.*\/\* ([^ ]+) \*\/\t.*\t.*');
-db_regex2 = re.compile(r'^Untracked SQL for (.+)\t.*\t.*$');
+db_regex1 = re.compile(r'.*\/\* ([^ ]+) \*\/\t.*\t.*\t.*\t.*');
+db_regex2 = re.compile(r'^Untracked SQL for (.+)\t.*\t.*\t.*\t.*$');
 def get_database(query):
     m = db_regex1.match(query)
     if m:
@@ -73,7 +73,7 @@ def combine(q, rows):
     # median of medians... insane?
     q_median = median(q_median_dur)
     #print "median of", q_median_dur, "is", q_median
-    return [get_database(q), round(float(q_docs) / float(total_docs) * 100, 2), q_median, q_total_dur, q] #, "--", q_invocations, q_docs, total_docs]
+    return [get_database(q), round(float(q_docs) / float(total_docs) * 100, 2), q_docs, q_median, q_total_dur, q] #, "--", q_invocations, q_docs, total_docs]
 
 queries = {}
 totals = {}
@@ -114,7 +114,7 @@ for a in inputs:
                 totals[total_key] += int(row[COUNT_COLUMN])
             else:
                 q = row[QUERY_COLUMN].replace("\t", " ")
-                qk = "\t".join([q, row[APP_COLUMN], row[CHAN_COLUMN]])
+                qk = "\t".join([q, row[THREAD_COLUMN], row[APP_COLUMN], row[CHAN_COLUMN], row[VER_COLUMN]])
                 #q = row[QUERY_COLUMN]
                 if qk not in queries:
                     queries[qk] = []
@@ -132,13 +132,13 @@ for q, rows in queries.iteritems():
     print "Combining", len(rows), "items for", q
     combined.append(combine(q, rows))
 
-for stub, column in [["frequency", 1], ["median_duration", 2], ["total_duration", 3]]:
+for stub, column in [["frequency", 1], ["median_duration", 3], ["total_duration", 4]]:
     filename = "weekly_{0}_{1}-{2}.csv".format(stub, week_start, week_end)
     print "Generating", filename
     counters = {}
     outfile = open(filename, "w")
     writer = csv.writer(outfile)
-    #db_name, frequency, median_duration, total_duration, query, app_name, channel
+    #db_name, frequency, document_count, median_duration, total_duration, query, thread, app_name, channel, version
     for row in sorted(combined, key=lambda r: r[column], reverse=True):
         q = row[-1]
         if q not in counters:
@@ -147,9 +147,9 @@ for stub, column in [["frequency", 1], ["median_duration", 2], ["total_duration"
 
         if counters[q] > MAX_ROWS:
             continue
-        query, app, chan = q.split("\t")
-        writer.writerow(row[0:-1] + [query, app, chan])
+        query, thread, app, chan, ver = q.split("\t")
+        writer.writerow(row[0:-1] + [query, thread, app, chan, ver])
     outfile.close()
 
 # Output columns:
-#db_name, frequency, median_duration, total_duration, query, app_name, channel
+#db_name, frequency, document_count, median_duration, total_duration, query, thread, app_name, channel, version

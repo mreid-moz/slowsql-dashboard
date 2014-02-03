@@ -9,36 +9,41 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script type="text/javascript" src="slowsql.js"></script>
-    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
-    <script type="text/javascript" src="jquery.tablesorter.widgets.min.js"></script>
     <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
     <link rel="stylesheet" href="slowsql.css" />
-    <link rel="stylesheet" href="theme.blue.css" />
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 </head>
 <body>
 <div id='header'>Telemetry SlowSQL</div>
 <div id='subheader'>Time flies when you're fetching data</div>
 <div id="navbar">
-    Show Top SlowSQL Queries by:<br/>
-    <input type="radio" name="slowsql_type" value="frequency" checked>Most Frequent</input>
-    <input type="radio" name="slowsql_type" value="median_duration">Longest Median Duration</input>
-    <input type="radio" name="slowsql_type" value="total_duration">Longest Total Duration</input>
+    Sort Top SlowSQL Queries by:<br/>
+    <input id="type_frequency" type="radio" name="slowsql_type" value="frequency" checked></input>
+    <label for="type_frequency">Most Frequent</label>
+    <input id="type_median" type="radio" name="slowsql_type" value="median_duration">
+    <label for="type_median">Longest Median Duration</label></input>
+    <input id="type_duration" type="radio" name="slowsql_type" value="total_duration">
+    <label for="type_duration">Longest Total Duration</label></input>
     <br/>
-    Filter by Channel: <select id="filter_channel">
-        <option>No Filter</option>
+    Filter by:<br/>
+    Thread Type: <select id="filter_thread">
+        <option value="mainThread">Main Thread</option>
+        <option value="otherThreads">Other Threads</option>
+    </select>
+    Application: <select id="filter_application">
+        <option>Firefox</option>
+        <option>Fennec</option>
+        <option>Thunderbird</option>
+        <option>OTHER</option>
+    </select>
+    Channel: <select id="filter_channel">
         <option>nightly</option>
         <option>aurora</option>
         <option>beta</option>
         <option>release</option>
         <option>OTHER</option>
     </select>
-    Application: <select id="filter_application">
-        <option>No Filter</option>
-        <option>Firefox</option>
-        <option>Fennec</option>
-        <option>Thunderbird</option>
-        <option>OTHER</option>
+    Version: <select id="filter_version">
     </select>
     Limit: <select id="filter_rowcount">
         <option value="10">Top 10</option>
@@ -72,8 +77,9 @@
     <th>Rank</th>
     <th title="SQLite database name (or UNKNOWN if it could not be determined)">DB Name</th>
     <th title="Percentage of total pings that contained this query">Frequency (%)</th>
-    <th title="Median of per-ping durations">Median Duration</th>
-    <th title="Total duration of all query executions">Total Duration</th>
+    <th title="Number of submissions containing this query">Ping Count</th>
+    <th title="Median of per-ping durations in milliseconds">Median Duration</th>
+    <th title="Total duration of all query executions in milliseconds">Total Duration</th>
     <th title="SQL Query String">Query</th>
     </tr>
     </thead>
@@ -94,20 +100,22 @@
     <th>Rank</th>
     <th title="SQLite database name (or UNKNOWN if it could not be determined)">DB Name</th>
     <th title="Percentage of total pings that contained this query">Frequency (%)</th>
-    <th title="Median of per-ping durations">Median Duration</th>
-    <th title="Total duration of all query executions">Total Duration</th>
+    <th title="Number of submissions containing this query">Ping Count</th>
+    <th title="Median of per-ping durations in milliseconds">Median Duration</th>
+    <th title="Total duration of all query executions in milliseconds">Total Duration</th>
     <th title="SQL Query String">Query</th>
     </tr>
     </thead>
     <tbody>
-        <tr>
+      <tr>
         <td colspan="6">No Data</td>
-        </tr>
+      </tr>
     </tbody>
     </table>
-    <button id="previous_week">&lt;-- Previous</button> <button id="next_week">Next --&gt;</button>
+    <div id="bottom_nav">
+      <button class="week_nav_button" id="previous_week">&lt;-- Previous Week</button>
+      <button class="week_nav_button" id="next_week">Next Week --&gt;</button>
     </div>
-    <div id="slowsql_data">
     </div>
 </div>
 <div id='footer'></div>
