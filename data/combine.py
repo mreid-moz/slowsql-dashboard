@@ -18,6 +18,13 @@ MEDIAN_DUR_COLUMN=9
 MAX_ROWS=100
 # expected columns: thread_type,submission_date,app_name,app_version,app_update_channel,query,document_count,total_invocations,total_duration,median_duration
 
+version_regex = re.compile(r'^([0-9]+).*$')
+def clean_version(ver):
+    m = version_regex.match(ver);
+    if m:
+        return m.group(1);
+    return ver;
+
 def get_key(row):
     # excluding QUERY_COLUMN
     return ",".join(row[APP_COLUMN:QUERY_COLUMN]);
@@ -114,7 +121,7 @@ for a in inputs:
                 totals[total_key] += int(row[COUNT_COLUMN])
             else:
                 q = row[QUERY_COLUMN].replace("\t", " ")
-                qk = "\t".join([q, row[THREAD_COLUMN], row[APP_COLUMN], row[CHAN_COLUMN], row[VER_COLUMN]])
+                qk = "\t".join([q, row[THREAD_COLUMN], row[APP_COLUMN], row[CHAN_COLUMN], clean_version(row[VER_COLUMN])])
                 #q = row[QUERY_COLUMN]
                 if qk not in queries:
                     queries[qk] = []
