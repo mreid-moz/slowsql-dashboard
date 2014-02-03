@@ -51,9 +51,13 @@
         <option value="50">Top 50</option>
         <option value="100">Top 100</option>
     </select>
-    <ul id="frequency" class="options"></ul>
-    <ul id="index" class="options"></ul>
+
+    <div id="week_nav">
+      <button class="week_nav_button" id="previous_week">&lt;-- Previous Week</button>
+      <button class="week_nav_button" id="next_week">Next Week --&gt;</button>
+    </div>
 </div>
+
 <div id="graphs">
     <div id="throbber">
         <div id="throbber-fg">
@@ -71,6 +75,7 @@
     <span class="new">New</span>
     <span class="missing">Gone</span>
     </div>
+
     <table id="current_data_table" class="data">
     <thead>
     <tr>
@@ -112,10 +117,6 @@
       </tr>
     </tbody>
     </table>
-    <div id="bottom_nav">
-      <button class="week_nav_button" id="previous_week">&lt;-- Previous Week</button>
-      <button class="week_nav_button" id="next_week">Next Week --&gt;</button>
-    </div>
     </div>
 </div>
 <div id='footer'></div>

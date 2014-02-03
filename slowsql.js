@@ -4,7 +4,7 @@
 "use strict";
 
 var yesterday = new Date();
-yesterday.setDate(yesterday.getDate() - 5);
+yesterday.setDate(yesterday.getDate() - 7);
 //console.log("Set yesterday to " + yyyymmdd(yesterday));
 
 // Monday is 1, so we adjust offset accordingly
@@ -239,11 +239,15 @@ function update_data() {
 
 $(function () {
     $('#previous_week').click(function() {
+        thisWeekStart.setDate(thisWeekStart.getDate() - 7);
+        thisWeekEnd.setDate(thisWeekEnd.getDate() - 7);
         lastWeekStart.setDate(lastWeekStart.getDate() - 7);
         lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
         update_data();
     });
     $('#next_week').click(function() {
+        thisWeekStart.setDate(thisWeekStart.getDate() + 7);
+        thisWeekEnd.setDate(thisWeekEnd.getDate() + 7);
         lastWeekStart.setDate(lastWeekStart.getDate() + 7);
         lastWeekEnd.setDate(lastWeekEnd.getDate() + 7);
         update_data();
