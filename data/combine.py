@@ -140,10 +140,10 @@ for q, rows in queries.iteritems():
     combined.append(combine(q, rows))
 
 for stub, column in [["frequency", 1], ["median_duration", 3], ["total_duration", 4]]:
-    filename = "weekly_{0}_{1}-{2}.csv".format(stub, week_start, week_end)
+    filename = "weekly_{0}_{1}-{2}.csv.gz".format(stub, week_start, week_end)
     print "Generating", filename
     counters = {}
-    outfile = open(filename, "w")
+    outfile = gzip.open(os.path.join(output_dir, filename), "wb")
     writer = csv.writer(outfile)
     #db_name, frequency, document_count, median_duration, total_duration, query, thread, app_name, channel, version
     for row in sorted(combined, key=lambda r: r[column], reverse=True):
