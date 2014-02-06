@@ -131,7 +131,7 @@ function populate_table(table_id, key, label) {
     tbody.empty();
     if (!slowsql_data[key] || slowsql_data[key].length == 0) {
         var trow = $('<tr>', {id: label + "1"});
-        trow.append($('<td>', {colspan: "6", id: label + "1rank", text: "No Data for " + key}));
+        trow.append($('<td>', {colspan: "7", id: label + "1rank", text: "No Data for " + key}));
         tbody.append(trow);
     } else {
         var maxRows = parseInt($('#filter_rowcount').find(":selected").val());
