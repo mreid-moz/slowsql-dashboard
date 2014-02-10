@@ -136,7 +136,7 @@ print "overall, found", total_rows, "rows, with", len(queries.keys()), "unique q
 
 combined = []
 for q, rows in queries.iteritems():
-    print "Combining", len(rows), "items for", q
+    #print "Combining", len(rows), "items for", q
     combined.append(combine(q, rows))
 
 for stub, column in [["frequency", 1], ["median_duration", 3], ["total_duration", 4]]:
